@@ -545,20 +545,46 @@ elif nav == "🔍 Source Evidence":
     st.markdown('<div class="app-title">🔍 Source Evidence Inspector</div>', unsafe_allow_html=True)
     st.markdown('<div class="app-subtitle">Deep dive into retrieved passages, reliability scores, and date partitions.</div>', unsafe_allow_html=True)
 
-    query = st.text_input("Enter query to inspect candidate chunks:", value="What is the API rate limit on the Pro plan?")
+    c_q, c_k = st.columns([4, 1])
+    with c_q:
+        query = st.text_input("Enter query to inspect candidate chunks:", value="What is the API rate limit on the Pro plan?")
+    with c_k:
+        top_k_select = st.slider("Candidate Chunks (Top K):", min_value=3, max_value=15, value=6, step=1)
+
     if query:
-        retrieved = pipeline.retriever.retrieve(query, top_k=6)
+        retrieved = pipeline.retriever.retrieve(query, top_k=top_k_select)
         reranked, conflicts = pipeline.evaluator.detect_and_resolve_conflicts(query, retrieved)
 
-        st.markdown(f"**Retrieved Candidate Chunks:** `{len(reranked)} passages`")
+        if conflicts:
+            st.markdown("### ⚠️ Contradiction Analysis")
+            for conf in conflicts:
+                st.markdown(f"""
+                <div class="conflict-card">
+                    <div class="conflict-header">
+                        <span>Contradiction: <b>{conf.get('topic', 'Platform Contradiction')}</b></span>
+                    </div>
+                    <div class="conflict-body">
+                        <b>Authoritative Resolution:</b> {conf.get('resolution')}<br/>
+                        <b>Active Rule:</b> {conf.get('active_rule')}<br/>
+                        <b>Older / Superseded Claim:</b> {conf.get('older_claim')}
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
+
+        st.markdown(f"**Retrieved Candidate Chunks ({len(reranked)} of {len(pipeline.retriever.chunks)} total chunks in knowledge base):**")
+        st.caption("Click any passage row below to view full text, retrieval similarity, and source authority tier:")
+
         for i, c in enumerate(reranked):
             badge = "🟢 AUTHORITATIVE" if not c.get("is_superseded") else "🔴 SUPERSEDED / OUTDATED"
-            with st.expander(f"{i+1}. {c.get('doc_id')} — {c.get('heading')} ({badge})"):
+            # Auto-expand the top 2 passages so text is visible immediately
+            with st.expander(f"{i+1}. {c.get('doc_id')} — {c.get('heading')} ({badge})", expanded=(i < 2)):
                 col_a, col_b, col_c = st.columns(3)
-                col_a.metric("Composite Score", c.get("retrieval_score"))
+                col_a.metric("Retrieval Score", c.get("retrieval_score"))
                 col_b.metric("Authority Weight", c.get("authority_score"))
-                col_c.metric("Update Date", c.get("parsed_date"))
-                st.markdown(f"**Source Tier:** `{c.get('tier')}` (Base Weight: {c.get('tier_weight')})")
+                col_c.metric("Document Date", c.get("parsed_date"))
+                
+                st.markdown(f"**Source Tier:** `{c.get('tier')}` (Base Weight: {c.get('tier_weight')}) | **Access:** `{c.get('access')}`")
+                st.markdown("**Passage Content:**")
                 st.code(c.get("text"), language="markdown")
 
 
