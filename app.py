@@ -219,6 +219,47 @@ st.markdown("""
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
+    /* Modern Sidebar Navigation styling */
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > label {
+        display: none !important;
+    }
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label > div:first-child {
+        display: none !important;
+    }
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label {
+        display: flex !important;
+        align-items: center !important;
+        padding: 10px 16px !important;
+        margin-bottom: 6px !important;
+        border-radius: 9px !important;
+        background: rgba(30, 41, 59, 0.4) !important;
+        border: 1px solid rgba(51, 65, 85, 0.4) !important;
+        color: #CBD5E1 !important;
+        font-size: 0.94rem !important;
+        font-weight: 500 !important;
+        cursor: pointer !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        width: 100% !important;
+    }
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label:hover {
+        background: rgba(59, 130, 246, 0.14) !important;
+        border-color: rgba(96, 165, 250, 0.5) !important;
+        color: #F8FAFC !important;
+        transform: translateX(4px) !important;
+    }
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label:has(input:checked) {
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.25), rgba(30, 41, 59, 0.7)) !important;
+        border: 1px solid #3B82F6 !important;
+        border-left: 5px solid #60A5FA !important;
+        color: #60A5FA !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+    }
+    div[data-testid="stSidebar"] div[data-testid="stRadio"] > div[role="radiogroup"] > label p {
+        font-size: 0.94rem !important;
+        margin: 0 !important;
+    }
+
     /* Quick Suggestion Chips */
     .chip-container {
         display: flex;
@@ -250,14 +291,22 @@ def check_ollama_status(url="http://localhost:11434/api/tags"):
 pipeline = load_pipeline()
 ollama_online, installed_models = check_ollama_status()
 
-# Sidebar Navigation
-st.sidebar.markdown("## 🪁 Paperkite Sage")
-st.sidebar.markdown("**Local Evidence-Based Support Intelligence**")
+# Sidebar Brand Header
+st.sidebar.markdown("""
+<div style="display:flex; align-items:center; gap:12px; margin-bottom: 1.25rem; padding: 4px 0;">
+    <span style="font-size: 2.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">🪁</span>
+    <div>
+        <div style="font-size: 1.35rem; font-weight: 800; color: #F8FAFC; letter-spacing: -0.02em;">Paperkite Sage</div>
+        <div style="font-size: 0.8rem; color: #94A3B8; font-weight: 500;">Local Support Intelligence</div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 nav = st.sidebar.radio(
     "Navigation Menu",
     ["🏠 Home", "💬 Ask a Question", "🔍 Source Evidence", "📋 Sample Questions", "📊 Evaluation Dashboard", "📖 About Project"],
-    index=1
+    index=1,
+    label_visibility="collapsed"
 )
 
 st.sidebar.markdown("---")
