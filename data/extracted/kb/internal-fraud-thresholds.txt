@@ -1,0 +1,8 @@
+INTERNAL: Fraud review thresholds
+=================================
+Last updated: 2025-12-15
+
+INTERNAL ONLY. DO NOT SHARE WITH CUSTOMERS.
+
+- A chargeback ratio above 0.9% triggers a manual account review.
+- A ratio above 1.5% triggers a payout hold.

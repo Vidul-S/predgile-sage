@@ -1,0 +1,12 @@
+What is the rate limit on Pro?
+==============================
+Last updated: 2023-11-02
+
+[dev_marta · 2023-11-02]
+Hitting 429s. What's the limit on Pro?
+
+[api_guy · 2023-11-02]
+500 per minute I think. Check the API overview.
+
+[mod_lena · 2023-11-03]
+Confirmed, 500 requests per minute for Pro.

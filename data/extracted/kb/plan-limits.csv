@@ -1,0 +1,4 @@
+plan,monthly_price_eur,seats,api_requests_per_minute,standard_payout_business_days,card_fee,support_first_response
+Starter,0,2,100,5,"2.4% + €0.25",48 hours
+Pro,49,10,1000,2,"1.9% + €0.20",24 hours
+Scale,299,unlimited,5000,1,"1.5% + €0.15",4 hours

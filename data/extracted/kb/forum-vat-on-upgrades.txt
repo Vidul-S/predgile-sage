@@ -1,0 +1,9 @@
+VAT on mid-cycle upgrades
+=========================
+Last updated: 2025-11-18
+
+[eu_seller · 2025-11-18]
+VAT is calculated on the full new plan price, not the prorated part.
+
+[mod_lena · 2025-11-19]
+Not quite. VAT is applied to the prorated net amount that is invoiced.

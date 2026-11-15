@@ -1,0 +1,6 @@
+Invoice attachment too large
+============================
+Last updated: 2024-04-10
+
+[freelance_j · 2024-04-10]
+Hit the 5MB limit with a big PDF. Compress it first.

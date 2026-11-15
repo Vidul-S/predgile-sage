@@ -1,0 +1,6 @@
+Webhook retries?
+================
+Last updated: 2025-09-12
+
+[backend_sam · 2025-09-12]
+It retries 3 times then gives up, learned the hard way.

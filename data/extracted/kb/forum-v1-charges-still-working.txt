@@ -1,0 +1,9 @@
+Is /v1/charges going away?
+==========================
+Last updated: 2025-02-20
+
+[shopdev88 · 2025-02-20]
+Saw a deprecation notice somewhere. Is /v1/charges going away?
+
+[tom_k · 2025-02-21]
+Mine still works fine, no issues. I wouldn't worry about it.

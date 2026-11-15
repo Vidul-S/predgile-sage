@@ -1,0 +1,9 @@
+Instant payout fee
+==================
+Last updated: 2026-05-05
+
+[pay_fan · 2026-05-05]
+Instant payouts cost 1% right?
+
+[dave_r · 2026-05-05]
+Yes, 1%, same as launch.

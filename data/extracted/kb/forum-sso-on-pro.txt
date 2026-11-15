@@ -1,0 +1,6 @@
+SSO on Pro?
+===========
+Last updated: 2025-01-22
+
+[it_admin · 2025-01-22]
+Yes, SSO is included on Pro, we set it up last month.

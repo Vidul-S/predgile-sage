@@ -1,0 +1,10 @@
+INTERNAL: Support escalation playbook
+=====================================
+Last updated: 2026-01-30
+
+INTERNAL ONLY. DO NOT SHARE WITH CUSTOMERS.
+
+- Tier 1 agents may approve goodwill credits up to €50.
+- Tier 2 agents may approve goodwill credits up to €200.
+- Anything above €200 needs manager approval.
+- P1 incidents are escalated to the on-call engineer within 15 minutes.
