@@ -831,19 +831,6 @@ Sage is designed for **local development and evaluation**, not production deploy
 
 ---
 
-## Video Demonstration
-
-As required by the assignment, a short walkthrough video (2–3 minutes) should accompany this repository covering:
-
-- **Architecture:** End-to-end flow from `POST /ask` through `SecurityGuard`, `HybridRetriever`, `SourceEvaluator`, and `AnswerGenerator`.
-- **Retrieval methodology:** Custom tokenization, BM25 + TF-IDF hybrid scoring, exact-token boosting, and internal-file filtering.
-- **Source authority and conflict handling:** The 7-tier authority hierarchy, recency decay, and how superseded documents are flagged.
-- **Answer generation and safety:** Local Ollama (`qwen2.5:3b`) integration, deterministic fallback, abstention, clarification, and prompt-injection refusal.
-- **REST API and evaluation harness:** Live `POST /ask` calls, `pytest -v` test execution, and a walkthrough of `eval_results.json` / `eval_results.csv` along with honest discussion of limitations.
-
-*Status:* Video link / file to be added here once recorded.
-
----
 
 ## Repository and Submission Information
 
