@@ -34,9 +34,8 @@ Unlike a generic chatbot that generates fluent text regardless of evidence quali
 24. [Configuration and Environment Variables]
 25. [Deployment and Execution Considerations]
 26. [Assignment Requirement Coverage]
-27. [Video Demonstration]
-28. [Repository and Submission Information]
-29. [Conclusion]
+27. [Repository and Submission Information]
+28. [Conclusion]
 
 ---
 
@@ -338,17 +337,17 @@ Answer generation is handled by `AnswerGenerator` (`src/answer_generator.py`).
 - **Default model:** `qwen2.5:3b` (configured in `SagePipeline.__init__` with `ollama_timeout=10`, and in `AnswerGenerator.__init__` with `timeout=12`).
 - **Temperature:** `0.2`.
 - **Prompt structure:**
-  - **System message:** Instructs the model to act as Sage, answer strictly from provided evidence, prefer authoritative over superseded sources, explain conflicts citing the changelog, and avoid inventing facts.
+  - **System message:** Instructs the model to act as Sage, answer strictly from provided evidence, prefer newer `[AUTHORITATIVE]` sources and changelogs over older or `[SUPERSEDED / OUTDATED]` ones, explain conflicts, respond with `ABSTAIN: <reason>` when evidence is insufficient, and respond with `CLARIFY: <question>` when required customer details are missing.
   - **User message:** Combines `CUSTOMER QUESTION`, the top 4 reranked chunks (`RETRIEVED EVIDENCE`, each tagged with `status_label`, `doc_id`, and `date`), and `DETECTED CONFLICTS & RESOLUTIONS` (if any).
 
-### Deterministic Fallback Behaviour
+### Deterministic Extractive Fallback Behaviour
 
 If the Ollama request fails (server offline, connection refused, HTTP error, or timeout), `AnswerGenerator` records the error in `llm_error`, sets `llm_generated = False` and `model = "deterministic-fallback"`, and calls `generate_deterministic_answer()`:
 
-- Contains **5 topic-specific fallback branches** matching keywords for partial refunds, invoice attachment limits, Pro plan rate limits, `/v1/charges`, and EU VAT proration, returning pre-structured grounded text with conditions and documentation notes.
-- For all other queries, falls back to returning a 350-character excerpt from the top-ranked chunk (`According to Paperkite documentation (<doc_id>): ...`).
+- **Zero hardcoded per-question answers:** Filters out superseded and lower-trust forum chunks when official docs exist, cleans markdown formatting, splits passages into candidate statements, and ranks statements using query-token overlap (with morphological stem matching), chunk retrieval/authority rank, recency bonus, changelog/formal-doc tier bonus, and concrete-fact bonus (numbers, HTTP codes, endpoints, currencies).
+- Selects up to 4 non-redundant statements (at most 2 per document so multi-document answers synthesize across sources), cites `(doc_id, date)` inline, and appends any detected conflict resolutions.
 
-No post-generation LLM verification or entailment check is performed on Ollama outputs.
+No post-generation LLM entailment check is performed on Ollama outputs.
 
 ---
 
@@ -358,9 +357,9 @@ Sage produces four discrete status values:
 
 | Status | Meaning | Actual Behaviour in Code |
 | :--- | :--- | :--- |
-| `answered` | Evidence is sufficient and query is safe and specific | Calls Ollama (`qwen2.5:3b`) with top 4 reranked chunks and conflict notes; falls back to `deterministic-fallback` on error. Returns `answer` string, up to 3 citations, and `conflicts`. |
-| `abstained` | Knowledge base cannot support an answer | Triggered by `check_insufficient_evidence()` via keyword checks for cryptocurrency (`crypto`, `cryptocurrency`, `bitcoin`, `ethereum`, `usdt`) or future pricing (`next year`, `future pricing`, `pricing in 2027`, `2028`), OR when no chunks are retrieved, OR when `retrieved_chunks[0]["retrieval_score"] < 0.15`. Returns `answer: null` and `model: "rule-based-abstention"`. |
-| `clarify` | Query is under-specified and depends on customer context | Triggered by `check_ambiguity()` when `"payout"` and timing words (`how long`, `schedule`, `time`, `take`) appear without a plan tier (`starter`, `pro`, `scale`, `enterprise`, `basic`, `business`) or country (`us`, `uk`, `eu`, `au`). Returns `answer: null`, `clarification_prompt` (internal dict / Streamlit), and `model: "rule-based-clarification"`. |
+| `answered` | Evidence is sufficient and query is safe and specific | Calls Ollama (`qwen2.5:3b`) with top 4 reranked chunks and conflict notes; falls back to extractive `deterministic-fallback` on error. Returns `answer` string, up to 3 citations, and `conflicts`. |
+| `abstained` | Knowledge base cannot support an answer | Triggered by `check_insufficient_evidence()` when retrieval is empty, `retrieval_score < 0.15`, the query asks about a prospective future timeframe (`next year`, `in 2027+`, `future pricing/plans/...`) absent from retrieved docs, or a specific non-generic domain term (length >= 5) in the query is completely absent from retrieved evidence—or when Ollama returns `ABSTAIN: ...`. Returns `answer: null`. |
+| `clarify` | Query is under-specified and depends on customer context | Triggered by `check_ambiguity()` when a scalar question (`how long`, `how much`, `what is the/my`, etc.) omits plan tier and region while the top retrieved authoritative chunk enumerates multiple plan tiers (`Starter:`, `Pro:`, `Scale:`) and regional conditions—dynamically building `clarification_prompt` from the retrieved chunk—or when Ollama returns `CLARIFY: ...`. Returns `answer: null`. |
 | `refused` | Direct prompt injection or probe for internal staff docs | Intercepted before retrieval by `SecurityGuard.evaluate_query()`. Returns a static refusal message, empty `citations: []`, empty `conflicts: []`, and `model: "security-guardrail"`. |
 
 **Important API note:** On `status: "clarify"`, `AnswerGenerator` populates a `clarification_prompt` field while setting `answer: None`. The Streamlit UI displays `clarification_prompt`, whereas `sage_api/views.py` currently serializes only `answer` (which is `null`) and `reasoning_summary`, omitting `clarification_prompt` from the HTTP JSON response.
@@ -441,7 +440,7 @@ The JSON below is an **actual HTTP `200 OK` response** captured via Django's tes
 
 ```json
 {
-  "answer": "You can issue partial refunds for any successful payment directly from the Paperkite Dashboard or via the API (POST /v2/refunds). Partial refunds are no longer capped at 3 per payment, and card payments can be refunded for up to 180 days.\n\n**Important Conditions:** Processing fees are not returned when a payment is refunded.\n\n**Note on Documentation:** Previously, partial refunds were limited to 3 per payment and excluded from Dashboard, but this cap was officially removed in changelog updates.",
+  "answer": "Based on the most authoritative Paperkite documentation:\n- 2. Choose Refund, then Partial refund. (refunds-issue.md, 2026-03-04)\n- You can issue several partial refunds against the same payment until the refunded total equals the original amount. (refunds-issue.md, 2026-03-04)\n- Refunds: the card refund window is extended from 90 to 180 days. Partial refunds are no longer limited to 3 per payment and can be issued from the Dashboard. (changelog.md, 2024-03-11)\n- You can issue up to 3 partial refunds per payment. Card payments can be refunded for 90 days. (refund-partial-guide.md, 2023-11-07)\n\n**Conflict Resolution:** The 3 partial refund limit was removed, and Dashboard partial refunds were officially introduced in the changelog and codified in refunds-issue.md.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: refunds-issue.md, updated 2026-03-04).",
   "status": "answered",
   "citations": [
     {
@@ -691,31 +690,31 @@ The repository includes an existing evaluation run in `eval_results.json` and `e
 | Status match (`passed` / `failed`) | `9/9` passed, `0` failed |
 | Decision consistency across 3 runs | `9/9` (`100%`) |
 | Exact answer string consistency across 3 runs | `9/9` (`100%`) |
-| Latency (min / median / mean / max) | `0 ms` / `7 ms` / `9.1 ms` / `33 ms` |
+| Latency (min / median / mean / max) | `0 ms` / `7 ms` / `8.6 ms` / `33 ms` |
 
 ### Per-Question Breakdown (`eval_results.json`)
 
 | ID | Actual Status | Expected | Model Recorded | Conflicts | Cited `doc_id`s | Run Latencies (ms) |
 | :--- | :--- | :--- | :--- | :---: | :--- | :--- |
-| `S01` | `answered` | `answered` | `deterministic-fallback` | 1 | `refund-partial-guide.md`, `refunds-issue.md`, `webhooks-faq.md` | 15, 7, 5 |
-| `S02` | `answered` | `answered` | `deterministic-fallback` | 1 | `invoice-attachments.md`, `changelog.md`, `customer-portal-faq.md` | 33, 31, 10 |
-| `S03` | `answered` | `answered` | `deterministic-fallback` | 1 | `plan-limits.csv`, `api-rate-limits.md`, `error-429.md` | 7, 9, 7 |
-| `S04` | `answered` | `answered` | `deterministic-fallback` | 1 | `changelog.md`, `webhooks-faq.md`, `api-overview.md` | 7, 7, 7 |
-| `S05` | `answered` | `answered` | `deterministic-fallback` | 1 | `subscription-proration.md`, `changelog.md`, `tax-eu-vat.md` | 19, 31, 12 |
-| `S06` | `abstained` | `abstained` | `rule-based-abstention` | 0 | `refunds-issue.md` | 5, 4, 4 |
-| `S07` | `abstained` | `abstained` | `rule-based-abstention` | 0 | `fees-pricing.md` | 5, 4, 4 |
+| `S01` | `answered` | `answered` | `deterministic-fallback` | 1 | `refund-partial-guide.md`, `refunds-issue.md`, `webhooks-faq.md` | 18, 7, 6 |
+| `S02` | `answered` | `answered` | `deterministic-fallback` | 1 | `invoice-attachments.md`, `changelog.md`, `customer-portal-faq.md` | 33, 9, 22 |
+| `S03` | `answered` | `answered` | `deterministic-fallback` | 1 | `plan-limits.csv`, `api-rate-limits.md`, `error-429.md` | 9, 8, 8 |
+| `S04` | `answered` | `answered` | `deterministic-fallback` | 1 | `changelog.md`, `webhooks-faq.md`, `api-overview.md` | 20, 7, 22 |
+| `S05` | `answered` | `answered` | `deterministic-fallback` | 1 | `subscription-proration.md`, `changelog.md`, `tax-eu-vat.md` | 8, 8, 9 |
+| `S06` | `abstained` | `abstained` | `rule-based-abstention` | 0 | `refunds-issue.md` | 5, 5, 4 |
+| `S07` | `abstained` | `abstained` | `rule-based-abstention` | 0 | `fees-pricing.md` | 5, 5, 4 |
 | `S08` | `refused` | `refused` | `security-guardrail` | 0 | *(none)* | 0, 0, 0 |
-| `S09` | `clarify` | `clarify` | `rule-based-clarification` | 0 | `payouts-faq.md`, `forum-payout-times.txt`, `logs-and-retention.md` | 4, 5, 3 |
+| `S09` | `clarify` | `clarify` | `rule-based-clarification` | 0 | `payouts-faq.md`, `forum-payout-times.txt`, `logs-and-retention.md` | 3, 3, 4 |
 
 ### Honest Analysis of Stored Results
 
-1. **Fallback execution vs. live LLM:** In the stored `eval_results.json`, all five `answered` questions (`S01`–`S05`) ran through `deterministic-fallback` (not live Ollama `qwen2.5:3b`). That is why latency averaged `9.1 ms` and exact answer text was 100% identical across all 3 runs. Running with Ollama live will increase latency (typically seconds per query on CPU) and introduce natural LLM phrasing variance across runs.
+1. **Fallback execution vs. live LLM:** In the stored `eval_results.json`, all five `answered` questions (`S01`–`S05`) ran through the extractive `deterministic-fallback` (not live Ollama `qwen2.5:3b`). That is why latency averaged `8.6 ms` and exact answer text was 100% identical across all 3 runs. Running with Ollama live will increase latency (typically seconds per query on CPU) and introduce natural LLM phrasing variance across runs.
 2. **Observed citation noise:** While key authoritative documents appear in `S01`–`S05`, purely lexical retrieval and the top-3 citation selection also included tangential or older documents:
    - `S01` cited `refund-partial-guide.md` (an outdated 2023 page not caught by the `is_superseded` filename filter) and `webhooks-faq.md`.
    - `S02` included `customer-portal-faq.md` as its 3rd citation.
    - `S04` included `webhooks-faq.md` and `api-overview.md` alongside `changelog.md`.
    - `S09` included `forum-payout-times.txt` and `logs-and-retention.md`.
-3. **Rule-coupled benchmark performance:** Because `S01`–`S05`, `S06`–`S07`, and `S09` have matching keyword rules in `AnswerGenerator` and `SourceEvaluator`, a `9/9` status match on the sample set should **not** be interpreted as generalizable performance on unseen hidden questions.
+3. **Generalization caveat:** While `AnswerGenerator` has no hardcoded per-question answers, `SourceEvaluator` still uses 5 domain conflict checks, and abstention relies on lexical term-coverage and future-horizon heuristics. Performance on unseen hidden questions should be verified with live Ollama enabled and expanded test sets.
 
 ---
 
@@ -723,7 +722,7 @@ The repository includes an existing evaluation run in `eval_results.json` and `e
 
 Inspecting the actual codebase reveals the following concrete limitations:
 
-- **Question- and topic-specific rules:** `SourceEvaluator` implements 5 hardcoded conflict rules; `AnswerGenerator.check_ambiguity()` handles only payout-duration ambiguity; `AnswerGenerator.check_insufficient_evidence()` includes explicit keyword rules for cryptocurrency and future pricing; and `generate_deterministic_answer()` has 5 topic-specific branches. Unseen questions outside these patterns rely solely on lexical retrieval, the `0.15` retrieval-score threshold, Ollama generation, or a raw 350-character excerpt fallback.
+- **Hardcoded conflict rules in `SourceEvaluator`:** `SourceEvaluator.detect_and_resolve_conflicts()` still implements 5 predefined conflict checks. While `AnswerGenerator` now uses general extractive synthesis, out-of-evidence term checks, future-horizon checks, and evidence-driven plan/region ambiguity detection (with zero hardcoded answers), conflict detection outside those 5 known topics is not automatic.
 - **Rule-based source classification and fixed reference date:** Authority tiers depend on filename prefixes and extensions (`changelog.md`, `forum-*`, `internal-*`, `.md`, `.html`, `.pdf`), and recency decay uses a fixed reference date (`2026-06-01`) rather than the current system date or corpus maximum date. `plan-limits.csv` also uses a hardcoded date (`2026-03-01`).
 - **Lexical-only retrieval:** Without semantic embeddings, paraphrased queries using terminology absent from the documents can score poorly or return noisy matches (as seen with `webhooks-faq.md` in `S01` and `S04`).
 - **Incomplete supersession filtering:** `is_superseded` only matches doc IDs containing `2024`, `2023`, `v1-charges-guide`, or `forum-`, so legacy pages without those substrings (such as `refund-partial-guide.md`) remain labelled `[AUTHORITATIVE]` and appear in citations.
@@ -775,7 +774,7 @@ pytest -v
 Executed locally on Python 3.13.7 with `pytest 9.1.1`:
 
 ```text
-============================= 32 passed in 6.69s ==============================
+============================= 32 passed in 4.73s ==============================
 ```
 
 Note: `tests/test_llm.py` mocks `requests.post` (it does not require Ollama to be running), `tests/test_sample_questions.py` does not include an assertion for `S05`, and no dedicated Django HTTP endpoint tests for `POST /ask` or `GET /health` exist in `tests/` yet.
@@ -817,11 +816,11 @@ Sage is designed for **local development and evaluation**, not production deploy
 | 1. Document ingestion | Extracts `kb.zip`, parses all 150 docs across `.md`, `.html`, `.txt`, `.pdf`, `.csv`, saves JSON | `src/document_loader.py`, `data/processed_documents.json` | Implemented |
 | 2. Understanding document metadata and authority | Extracts titles, sections, dates, internal flags; 7-tier rule-based authority + recency weighting | `src/document_loader.py`, `src/source_evaluator.py` | Implemented (rule-based) |
 | 3. Retrieval of relevant evidence | Hybrid BM25Okapi + TF-IDF cosine + exact-token boost, internal doc exclusion | `src/retriever.py`, `data/chunks.json` | Implemented (lexical only) |
-| 4. Answer generation | Local Ollama `qwen2.5:3b` synthesis with deterministic fallback (5 topic branches + snippet fallback) | `src/answer_generator.py` | Partially implemented (fallback has topic-specific branches) |
+| 4. Answer generation | Local Ollama `qwen2.5:3b` synthesis with general extractive sentence-ranking fallback (zero hardcoded answers) | `src/answer_generator.py` | Implemented |
 | 5. Citations | Extracts top 3 non-superseded `doc_id` + 220-char passages; no claim-level verification | `src/answer_generator.py`, `sage_api/views.py` | Partially implemented |
 | 6. Conflict handling | 5 hardcoded domain conflict checks + partial `is_superseded` flagging; not general semantic detection | `src/source_evaluator.py` | Limited implementation |
-| 7. Abstention | Keyword checks (crypto, future pricing) + general retrieval score threshold (`< 0.15`) | `src/answer_generator.py` (`check_insufficient_evidence`) | Partially implemented |
-| 8. Ambiguous-question clarification | Rule-based payout ambiguity check; `clarification_prompt` shown in UI but omitted from `POST /ask`; no multi-turn memory | `src/answer_generator.py`, `sage_api/views.py`, `app.py` | Limited implementation |
+| 7. Abstention | General retrieval-score floor (`< 0.15`), future-horizon check, out-of-evidence domain-term check, plus LLM `ABSTAIN:` support | `src/answer_generator.py` (`check_insufficient_evidence`) | Implemented (heuristic + LLM) |
+| 8. Ambiguous-question clarification | Evidence-driven plan/region ambiguity check + LLM `CLARIFY:` support; `clarification_prompt` shown in UI but omitted from `POST /ask`; no multi-turn memory | `src/answer_generator.py`, `sage_api/views.py`, `app.py` | Partially implemented |
 | 9. Security | Regex direct-injection & internal-probe guardrail, internal retrieval filter, regex indirect scrubbing | `src/security.py`, `src/document_loader.py`, `src/retriever.py` | Partially implemented (regex-based) |
 | 10. REST API | Django REST Framework `POST /ask` and `GET /health` matching core response contract | `sage_api/urls.py`, `sage_api/views.py`, `manage.py` | Implemented |
 | 11. Evaluation harness | Automated runner executing `sample_questions.json` and checking status & consistency | `eval_harness.py` | Partially implemented (sample set only; no automated claim/citation scoring) |

@@ -5,7 +5,7 @@
     "passed": 9,
     "failed": 0,
     "consistent_decisions": 9,
-    "avg_latency_ms": 9.1
+    "avg_latency_ms": 8.6
   },
   "runs": [
     {
@@ -16,7 +16,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "You can issue partial refunds for any successful payment directly from the Paperkite Dashboard or via the API (POST /v2/refunds). Partial refunds are no longer capped at 3 per payment, and card payments can be refunded for up to 180 days.\n\n**Important Conditions:** Processing fees are not returned when a payment is refunded.\n\n**Note on Documentation:** Previously, partial refunds were limited to 3 per payment and excluded from Dashboard, but this cap was officially removed in changelog updates.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- 2. Choose Refund, then Partial refund. (refunds-issue.md, 2026-03-04)\n- You can issue several partial refunds against the same payment until the refunded total equals the original amount. (refunds-issue.md, 2026-03-04)\n- Refunds: the card refund window is extended from 90 to 180 days. Partial refunds are no longer limited to 3 per payment and can be issued from the Dashboard. (changelog.md, 2024-03-11)\n- You can issue up to 3 partial refunds per payment. Card payments can be refunded for 90 days. (refund-partial-guide.md, 2023-11-07)\n\n**Conflict Resolution:** The 3 partial refund limit was removed, and Dashboard partial refunds were officially introduced in the changelog and codified in refunds-issue.md.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: refunds-issue.md, updated 2026-03-04).",
       "citations": [
         "refund-partial-guide.md",
         "refunds-issue.md",
@@ -24,7 +24,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 15
+      "latency_ms": 18
     },
     {
       "run": 2,
@@ -34,7 +34,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "You can issue partial refunds for any successful payment directly from the Paperkite Dashboard or via the API (POST /v2/refunds). Partial refunds are no longer capped at 3 per payment, and card payments can be refunded for up to 180 days.\n\n**Important Conditions:** Processing fees are not returned when a payment is refunded.\n\n**Note on Documentation:** Previously, partial refunds were limited to 3 per payment and excluded from Dashboard, but this cap was officially removed in changelog updates.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- 2. Choose Refund, then Partial refund. (refunds-issue.md, 2026-03-04)\n- You can issue several partial refunds against the same payment until the refunded total equals the original amount. (refunds-issue.md, 2026-03-04)\n- Refunds: the card refund window is extended from 90 to 180 days. Partial refunds are no longer limited to 3 per payment and can be issued from the Dashboard. (changelog.md, 2024-03-11)\n- You can issue up to 3 partial refunds per payment. Card payments can be refunded for 90 days. (refund-partial-guide.md, 2023-11-07)\n\n**Conflict Resolution:** The 3 partial refund limit was removed, and Dashboard partial refunds were officially introduced in the changelog and codified in refunds-issue.md.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: refunds-issue.md, updated 2026-03-04).",
       "citations": [
         "refund-partial-guide.md",
         "refunds-issue.md",
@@ -52,7 +52,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "You can issue partial refunds for any successful payment directly from the Paperkite Dashboard or via the API (POST /v2/refunds). Partial refunds are no longer capped at 3 per payment, and card payments can be refunded for up to 180 days.\n\n**Important Conditions:** Processing fees are not returned when a payment is refunded.\n\n**Note on Documentation:** Previously, partial refunds were limited to 3 per payment and excluded from Dashboard, but this cap was officially removed in changelog updates.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- 2. Choose Refund, then Partial refund. (refunds-issue.md, 2026-03-04)\n- You can issue several partial refunds against the same payment until the refunded total equals the original amount. (refunds-issue.md, 2026-03-04)\n- Refunds: the card refund window is extended from 90 to 180 days. Partial refunds are no longer limited to 3 per payment and can be issued from the Dashboard. (changelog.md, 2024-03-11)\n- You can issue up to 3 partial refunds per payment. Card payments can be refunded for 90 days. (refund-partial-guide.md, 2023-11-07)\n\n**Conflict Resolution:** The 3 partial refund limit was removed, and Dashboard partial refunds were officially introduced in the changelog and codified in refunds-issue.md.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: refunds-issue.md, updated 2026-03-04).",
       "citations": [
         "refund-partial-guide.md",
         "refunds-issue.md",
@@ -60,7 +60,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 5
+      "latency_ms": 6
     },
     {
       "run": 1,
@@ -70,7 +70,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "The maximum file size for invoice attachments is 10 MB per file.\n\n**Important Conditions:** Allowed formats include PDF, PNG, and JPEG. Up to 5 attachments per invoice.\n\n**Note on Documentation:** While earlier 2024 guides listed a 5 MB limit, the attachment size was officially increased to 10 MB in the changelog and active invoice documentation.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- Invoices: the attachment size limit rises from 5 MB to 10 MB. (changelog.md, 2025-09-08)\n- Add supporting files to an invoice before you send it. (invoice-attachments.md, 2025-09-20)\n- You can attach up to 5 files to one invoice. (invoice-attachments.md, 2025-09-20)\n- They can update their card, download invoices and cancel. Branding is available on Pro and Scale. (customer-portal-faq.md, 2025-06-02)\n\n**Conflict Resolution:** The attachment size limit was increased from 5 MB to 10 MB in the changelog. The 5 MB limit is outdated.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: changelog.md, updated 2025-09-08).",
       "citations": [
         "invoice-attachments.md",
         "changelog.md",
@@ -88,7 +88,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "The maximum file size for invoice attachments is 10 MB per file.\n\n**Important Conditions:** Allowed formats include PDF, PNG, and JPEG. Up to 5 attachments per invoice.\n\n**Note on Documentation:** While earlier 2024 guides listed a 5 MB limit, the attachment size was officially increased to 10 MB in the changelog and active invoice documentation.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- Invoices: the attachment size limit rises from 5 MB to 10 MB. (changelog.md, 2025-09-08)\n- Add supporting files to an invoice before you send it. (invoice-attachments.md, 2025-09-20)\n- You can attach up to 5 files to one invoice. (invoice-attachments.md, 2025-09-20)\n- They can update their card, download invoices and cancel. Branding is available on Pro and Scale. (customer-portal-faq.md, 2025-06-02)\n\n**Conflict Resolution:** The attachment size limit was increased from 5 MB to 10 MB in the changelog. The 5 MB limit is outdated.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: changelog.md, updated 2025-09-08).",
       "citations": [
         "invoice-attachments.md",
         "changelog.md",
@@ -96,7 +96,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 31
+      "latency_ms": 9
     },
     {
       "run": 3,
@@ -106,7 +106,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "The maximum file size for invoice attachments is 10 MB per file.\n\n**Important Conditions:** Allowed formats include PDF, PNG, and JPEG. Up to 5 attachments per invoice.\n\n**Note on Documentation:** While earlier 2024 guides listed a 5 MB limit, the attachment size was officially increased to 10 MB in the changelog and active invoice documentation.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- Invoices: the attachment size limit rises from 5 MB to 10 MB. (changelog.md, 2025-09-08)\n- Add supporting files to an invoice before you send it. (invoice-attachments.md, 2025-09-20)\n- You can attach up to 5 files to one invoice. (invoice-attachments.md, 2025-09-20)\n- They can update their card, download invoices and cancel. Branding is available on Pro and Scale. (customer-portal-faq.md, 2025-06-02)\n\n**Conflict Resolution:** The attachment size limit was increased from 5 MB to 10 MB in the changelog. The 5 MB limit is outdated.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: changelog.md, updated 2025-09-08).",
       "citations": [
         "invoice-attachments.md",
         "changelog.md",
@@ -114,7 +114,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 10
+      "latency_ms": 22
     },
     {
       "run": 1,
@@ -124,25 +124,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "The API rate limit on the Pro plan is 1,000 requests per minute across all account API keys.\n\n**Important Conditions:** Rate limits apply account-wide. Exceeding the threshold returns HTTP 429 Too Many Requests.\n\n**Note on Documentation:** Earlier documentation and forum posts stated 500 requests per minute, but the limit was increased to 1,000 requests per minute in the March 2025 platform update.",
-      "citations": [
-        "plan-limits.csv",
-        "api-rate-limits.md",
-        "error-429.md"
-      ],
-      "conflicts_count": 1,
-      "model": "deterministic-fallback",
-      "latency_ms": 7
-    },
-    {
-      "run": 2,
-      "question_id": "S03",
-      "question": "What is the API rate limit on the Pro plan?",
-      "level": "medium",
-      "status": "answered",
-      "status_label": "Answered",
-      "expected_status": "answered",
-      "answer": "The API rate limit on the Pro plan is 1,000 requests per minute across all account API keys.\n\n**Important Conditions:** Rate limits apply account-wide. Exceeding the threshold returns HTTP 429 Too Many Requests.\n\n**Note on Documentation:** Earlier documentation and forum posts stated 500 requests per minute, but the limit was increased to 1,000 requests per minute in the March 2025 platform update.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- API Rate Limit: 1000 requests per minute (plan-limits.csv, 2026-03-01)\n- Card Processing Fee: 1.9% + €0.20 (plan-limits.csv, 2026-03-01)\n- Pro: 1,000 requests per minute. (api-rate-limits.md, 2026-02-09)\n- Rate limits apply per account across all API keys. (api-rate-limits.md, 2026-02-09)\n\n**Conflict Resolution:** The Pro plan API rate limit was raised from 500 to 1,000 requests per minute in the March 2025 changelog. The older 500 limit is superseded.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: plan-limits.csv, updated 2026-03-01).",
       "citations": [
         "plan-limits.csv",
         "api-rate-limits.md",
@@ -153,14 +135,14 @@
       "latency_ms": 9
     },
     {
-      "run": 3,
+      "run": 2,
       "question_id": "S03",
       "question": "What is the API rate limit on the Pro plan?",
       "level": "medium",
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "The API rate limit on the Pro plan is 1,000 requests per minute across all account API keys.\n\n**Important Conditions:** Rate limits apply account-wide. Exceeding the threshold returns HTTP 429 Too Many Requests.\n\n**Note on Documentation:** Earlier documentation and forum posts stated 500 requests per minute, but the limit was increased to 1,000 requests per minute in the March 2025 platform update.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- API Rate Limit: 1000 requests per minute (plan-limits.csv, 2026-03-01)\n- Card Processing Fee: 1.9% + €0.20 (plan-limits.csv, 2026-03-01)\n- Pro: 1,000 requests per minute. (api-rate-limits.md, 2026-02-09)\n- Rate limits apply per account across all API keys. (api-rate-limits.md, 2026-02-09)\n\n**Conflict Resolution:** The Pro plan API rate limit was raised from 500 to 1,000 requests per minute in the March 2025 changelog. The older 500 limit is superseded.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: plan-limits.csv, updated 2026-03-01).",
       "citations": [
         "plan-limits.csv",
         "api-rate-limits.md",
@@ -168,7 +150,25 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 7
+      "latency_ms": 8
+    },
+    {
+      "run": 3,
+      "question_id": "S03",
+      "question": "What is the API rate limit on the Pro plan?",
+      "level": "medium",
+      "status": "answered",
+      "status_label": "Answered",
+      "expected_status": "answered",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- API Rate Limit: 1000 requests per minute (plan-limits.csv, 2026-03-01)\n- Card Processing Fee: 1.9% + €0.20 (plan-limits.csv, 2026-03-01)\n- Pro: 1,000 requests per minute. (api-rate-limits.md, 2026-02-09)\n- Rate limits apply per account across all API keys. (api-rate-limits.md, 2026-02-09)\n\n**Conflict Resolution:** The Pro plan API rate limit was raised from 500 to 1,000 requests per minute in the March 2025 changelog. The older 500 limit is superseded.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: plan-limits.csv, updated 2026-03-01).",
+      "citations": [
+        "plan-limits.csv",
+        "api-rate-limits.md",
+        "error-429.md"
+      ],
+      "conflicts_count": 1,
+      "model": "deterministic-fallback",
+      "latency_ms": 8
     },
     {
       "run": 1,
@@ -178,7 +178,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "No, you cannot use the /v1/charges endpoint. The endpoint was deprecated on 2025-01-15 and permanently removed on 2026-01-15. Requests to /v1/charges return HTTP 410 Gone.\n\n**Important Conditions:** All integrations must migrate to the /v2/payments endpoint.\n\n**Note on Documentation:** Although historical forum posts mention it working, the product changelog confirms permanent removal on 2026-01-15.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- API: /v1/charges is removed. Requests return 410 Gone. (changelog.md, 2026-01-15)\n- API: /v1/charges is deprecated. Sunset date: 15 January 2026. Use /v2/payments. (changelog.md, 2025-01-15)\n- The Paperkite API is organised around REST. To take a payment, create a charge with POST /v1/charges. (api-overview.md, 2024-05-30)\n\n**Conflict Resolution:** The /v1/charges endpoint was permanently decommissioned on 2026-01-15 and returns 410 Gone. The forum post claiming it still works is outdated; integrations must use /v2/payments.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: changelog.md, updated 2026-01-15).",
       "citations": [
         "changelog.md",
         "webhooks-faq.md",
@@ -186,7 +186,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 7
+      "latency_ms": 20
     },
     {
       "run": 2,
@@ -196,7 +196,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "No, you cannot use the /v1/charges endpoint. The endpoint was deprecated on 2025-01-15 and permanently removed on 2026-01-15. Requests to /v1/charges return HTTP 410 Gone.\n\n**Important Conditions:** All integrations must migrate to the /v2/payments endpoint.\n\n**Note on Documentation:** Although historical forum posts mention it working, the product changelog confirms permanent removal on 2026-01-15.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- API: /v1/charges is removed. Requests return 410 Gone. (changelog.md, 2026-01-15)\n- API: /v1/charges is deprecated. Sunset date: 15 January 2026. Use /v2/payments. (changelog.md, 2025-01-15)\n- The Paperkite API is organised around REST. To take a payment, create a charge with POST /v1/charges. (api-overview.md, 2024-05-30)\n\n**Conflict Resolution:** The /v1/charges endpoint was permanently decommissioned on 2026-01-15 and returns 410 Gone. The forum post claiming it still works is outdated; integrations must use /v2/payments.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: changelog.md, updated 2026-01-15).",
       "citations": [
         "changelog.md",
         "webhooks-faq.md",
@@ -214,7 +214,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "No, you cannot use the /v1/charges endpoint. The endpoint was deprecated on 2025-01-15 and permanently removed on 2026-01-15. Requests to /v1/charges return HTTP 410 Gone.\n\n**Important Conditions:** All integrations must migrate to the /v2/payments endpoint.\n\n**Note on Documentation:** Although historical forum posts mention it working, the product changelog confirms permanent removal on 2026-01-15.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- API: /v1/charges is removed. Requests return 410 Gone. (changelog.md, 2026-01-15)\n- API: /v1/charges is deprecated. Sunset date: 15 January 2026. Use /v2/payments. (changelog.md, 2025-01-15)\n- The Paperkite API is organised around REST. To take a payment, create a charge with POST /v1/charges. (api-overview.md, 2024-05-30)\n\n**Conflict Resolution:** The /v1/charges endpoint was permanently decommissioned on 2026-01-15 and returns 410 Gone. The forum post claiming it still works is outdated; integrations must use /v2/payments.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: changelog.md, updated 2026-01-15).",
       "citations": [
         "changelog.md",
         "webhooks-faq.md",
@@ -222,7 +222,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 7
+      "latency_ms": 22
     },
     {
       "run": 1,
@@ -232,7 +232,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "When an EU customer upgrades mid-cycle, Paperkite calculates VAT strictly on the net, prorated amount invoiced for the remaining days of the cycle. Proration is calculated on a per-day basis.\n\n**Important Conditions:** Business customers with a valid EU VAT ID verified against VIES are invoiced at 0% under the reverse charge mechanism.\n\n**Note on Documentation:** Documentation in tax-eu-vat.md confirms VAT applies only to the net prorated line item, not the full price of the new plan.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- When a customer changes plan mid-cycle, Paperkite prorates the difference per day. (subscription-proration.md, 2025-10-14)\n- Paperkite calculates VAT on each invoice line, including prorated lines. (tax-eu-vat.md, 2025-12-02)\n- VAT is applied to the net, prorated amount. (tax-eu-vat.md, 2025-12-02)\n- EU VAT IDs are validated against VIES. (tax-id-collection.md, 2025-06-01)\n\n**Conflict Resolution:** Documentation in tax-eu-vat.md confirms VAT applies only to the net, prorated amount invoiced for the remaining billing cycle, refuting community forum speculation.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: subscription-proration.md, updated 2025-10-14).",
       "citations": [
         "subscription-proration.md",
         "changelog.md",
@@ -240,7 +240,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 19
+      "latency_ms": 8
     },
     {
       "run": 2,
@@ -250,7 +250,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "When an EU customer upgrades mid-cycle, Paperkite calculates VAT strictly on the net, prorated amount invoiced for the remaining days of the cycle. Proration is calculated on a per-day basis.\n\n**Important Conditions:** Business customers with a valid EU VAT ID verified against VIES are invoiced at 0% under the reverse charge mechanism.\n\n**Note on Documentation:** Documentation in tax-eu-vat.md confirms VAT applies only to the net prorated line item, not the full price of the new plan.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- When a customer changes plan mid-cycle, Paperkite prorates the difference per day. (subscription-proration.md, 2025-10-14)\n- Paperkite calculates VAT on each invoice line, including prorated lines. (tax-eu-vat.md, 2025-12-02)\n- VAT is applied to the net, prorated amount. (tax-eu-vat.md, 2025-12-02)\n- EU VAT IDs are validated against VIES. (tax-id-collection.md, 2025-06-01)\n\n**Conflict Resolution:** Documentation in tax-eu-vat.md confirms VAT applies only to the net, prorated amount invoiced for the remaining billing cycle, refuting community forum speculation.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: subscription-proration.md, updated 2025-10-14).",
       "citations": [
         "subscription-proration.md",
         "changelog.md",
@@ -258,7 +258,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 31
+      "latency_ms": 8
     },
     {
       "run": 3,
@@ -268,7 +268,7 @@
       "status": "answered",
       "status_label": "Answered",
       "expected_status": "answered",
-      "answer": "When an EU customer upgrades mid-cycle, Paperkite calculates VAT strictly on the net, prorated amount invoiced for the remaining days of the cycle. Proration is calculated on a per-day basis.\n\n**Important Conditions:** Business customers with a valid EU VAT ID verified against VIES are invoiced at 0% under the reverse charge mechanism.\n\n**Note on Documentation:** Documentation in tax-eu-vat.md confirms VAT applies only to the net prorated line item, not the full price of the new plan.",
+      "answer": "Based on the most authoritative Paperkite documentation:\n- When a customer changes plan mid-cycle, Paperkite prorates the difference per day. (subscription-proration.md, 2025-10-14)\n- Paperkite calculates VAT on each invoice line, including prorated lines. (tax-eu-vat.md, 2025-12-02)\n- VAT is applied to the net, prorated amount. (tax-eu-vat.md, 2025-12-02)\n- EU VAT IDs are validated against VIES. (tax-id-collection.md, 2025-06-01)\n\n**Conflict Resolution:** Documentation in tax-eu-vat.md confirms VAT applies only to the net, prorated amount invoiced for the remaining billing cycle, refuting community forum speculation.\n\n**Source Grounding:** Synthesized extractively from retrieved sources (primary: subscription-proration.md, updated 2025-10-14).",
       "citations": [
         "subscription-proration.md",
         "changelog.md",
@@ -276,7 +276,7 @@
       ],
       "conflicts_count": 1,
       "model": "deterministic-fallback",
-      "latency_ms": 12
+      "latency_ms": 9
     },
     {
       "run": 1,
@@ -308,7 +308,7 @@
       ],
       "conflicts_count": 0,
       "model": "rule-based-abstention",
-      "latency_ms": 4
+      "latency_ms": 5
     },
     {
       "run": 3,
@@ -356,7 +356,7 @@
       ],
       "conflicts_count": 0,
       "model": "rule-based-abstention",
-      "latency_ms": 4
+      "latency_ms": 5
     },
     {
       "run": 3,
@@ -418,42 +418,6 @@
     },
     {
       "run": 1,
-      "question_id": "S09",
-      "question": "How long do payouts take?",
-      "level": "ambiguous",
-      "status": "clarify",
-      "status_label": "Needs clarification",
-      "expected_status": "clarify",
-      "answer": null,
-      "citations": [
-        "payouts-faq.md",
-        "forum-payout-times.txt",
-        "logs-and-retention.md"
-      ],
-      "conflicts_count": 0,
-      "model": "rule-based-clarification",
-      "latency_ms": 4
-    },
-    {
-      "run": 2,
-      "question_id": "S09",
-      "question": "How long do payouts take?",
-      "level": "ambiguous",
-      "status": "clarify",
-      "status_label": "Needs clarification",
-      "expected_status": "clarify",
-      "answer": null,
-      "citations": [
-        "payouts-faq.md",
-        "forum-payout-times.txt",
-        "logs-and-retention.md"
-      ],
-      "conflicts_count": 0,
-      "model": "rule-based-clarification",
-      "latency_ms": 5
-    },
-    {
-      "run": 3,
       "question_id": "S09",
       "question": "How long do payouts take?",
       "level": "ambiguous",
@@ -469,6 +433,42 @@
       "conflicts_count": 0,
       "model": "rule-based-clarification",
       "latency_ms": 3
+    },
+    {
+      "run": 2,
+      "question_id": "S09",
+      "question": "How long do payouts take?",
+      "level": "ambiguous",
+      "status": "clarify",
+      "status_label": "Needs clarification",
+      "expected_status": "clarify",
+      "answer": null,
+      "citations": [
+        "payouts-faq.md",
+        "forum-payout-times.txt",
+        "logs-and-retention.md"
+      ],
+      "conflicts_count": 0,
+      "model": "rule-based-clarification",
+      "latency_ms": 3
+    },
+    {
+      "run": 3,
+      "question_id": "S09",
+      "question": "How long do payouts take?",
+      "level": "ambiguous",
+      "status": "clarify",
+      "status_label": "Needs clarification",
+      "expected_status": "clarify",
+      "answer": null,
+      "citations": [
+        "payouts-faq.md",
+        "forum-payout-times.txt",
+        "logs-and-retention.md"
+      ],
+      "conflicts_count": 0,
+      "model": "rule-based-clarification",
+      "latency_ms": 4
     }
   ]
 }
