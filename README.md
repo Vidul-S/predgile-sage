@@ -34,9 +34,8 @@ Unlike a generic chatbot that generates fluent text regardless of evidence quali
 24. [Configuration and Environment Variables]
 25. [Deployment and Execution Considerations]
 26. [Assignment Requirement Coverage]
-27. [Video Demonstration]
-28. [Repository and Submission Information]
-29. [Conclusion]
+27. [Repository and Submission Information]
+28. [Conclusion]
 
 ---
 
